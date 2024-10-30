@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Upload pdf file untuk menscan",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start:dev": "node --watch index.js",
+    "dev": "node --watch index.js",
     "start": "node index.js"
   },
   "author": "ovie revaldi => revaldiovie3@gmail.com",
