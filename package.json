@@ -11,6 +11,7 @@
   "author": "ovie revaldi => revaldiovie3@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^4.21.1"
   }
 }
