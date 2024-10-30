@@ -4,8 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> <%= title %> </title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
-    <h1> <%= title %> </h1>
+    <main class="p-4">
+        <h1 class="text-center mb-5"> <%= title %> </h1>
+        
+        <div class="form-box fs-5">
+            <div>
+                <label for="pdf-file" class="mb-3 fw-semibold">Upload PDF file</label>
+                 <input class="form-control fs-5" type="file" id="pdf-file" accept=".pdf">
+            </div>
+
+            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" hidden>
+                <div class="progress-bar" style="width: 0%"></div>
+            </div>
+
+            <!-- Button trigger modal -->
+            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#resultModal">
+                Launch demo modal
+            </button> -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" data-bs-backdrop="static" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-3 text-center">Result</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ol class="list-group list-group-numbered py-4 px-4">
+                            <li class="list-group-item fw-semibold">A list item</li>
+                            <li class="list-group-item fw-semibold">A list item</li>
+                        </ol>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Download</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
+
+<style>
+    .form-box{
+        width: 400px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+</style>
 </html>
