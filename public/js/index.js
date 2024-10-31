@@ -6,14 +6,26 @@ function handleFileChange(e) {
 
     if(files.length > 0){
         const file = files[0];
+        
         if(file.type !== 'application/pdf'){
             submitButton.disabled = true;
+            showErrorAlert(true, 'File format is wrong.');
             return;
         }
-        else{
-            const submitButton = document.getElementById('submit-btn');
-            submitButton.disabled = false;
-        }
+        showErrorAlert(false)
+        submitButton.disabled = false;
+    }
+}
+
+function showErrorAlert(value = false, message = ''){
+    const errorAlert = document.getElementById('error-alert');
+    if(value){
+        errorAlert.innerHTML = message;
+        errorAlert.hidden = false;
+    }
+    else{
+        errorAlert.innerHTML = '';
+        errorAlert.hidden = true
     }
 }
 

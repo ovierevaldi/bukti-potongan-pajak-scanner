@@ -25,3 +25,9 @@ pre {
     word-wrap: break-word;
     font-family: monospace;
 }
+
+#error-alert{
+    max-width: 400px;
+    margin: auto;
+    margin-bottom: 2rem;
+}

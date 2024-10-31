@@ -1,19 +1,16 @@
-
 import multer from 'multer'
 import { PDFExtract } from 'pdf.js-extract';
+import fs from 'fs';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
+const pdfExtract = new PDFExtract();
 const storage = multer.diskStorage({
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
       cb(null, uniqueSuffix + '.pdf')
     }
 })
-
-const pdfExtract = new PDFExtract();
-import fs from 'fs';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -38,10 +35,7 @@ const handleExtractPDF = (filename, options = {}, callback) => {
 }
 
 const saveJSONFile = async (filename, data) => {
-  // Your JSON data
     const name = path.basename(filename, '.pdf')
-
-    // Define the directory path
     const filePath = path.join(__dirname, '..', 'uploads', 'jsons', name + '.json');
 
     try {

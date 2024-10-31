@@ -13,9 +13,11 @@
     <link rel="stylesheet" href="/styles/index.css">
 </head>
 <body>
+    
     <main class="p-4">
         <h1 class="text-center mb-5"> <%= title %> </h1>
             <form action="/pdf-extract" method="post" enctype="multipart/form-data" class="form-box fs-5" id="pdf-upload-form">
+                <div class="alert alert-danger text-center" role="alert" id="error-alert" hidden></div>
                 <div >
                     <label for="pdf-input" class="mb-3 fw-semibold">Upload PDF file</label>
                      <input 
