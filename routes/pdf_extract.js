@@ -1,39 +1,31 @@
 import handleExtractPDF from '../controller/pdf_extract.js';
 import express from 'express';
-import multer from 'multer';
+// import multer from 'multer';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import multerClient from '../multer-conf.js';
 
 const router = express.Router();
-const upload = multer({ storage: storage })
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-    const filePath = path.join(__dirname, '..', 'uploads', 'pdfs');
-      cb(null, filePath)
-    },
+// get form data: pdf file is on pdf-input field
+router.post('/', multerClient.single('pdf-input'),  (req, res, next) => {
+  // get filename from multer dont upload
+  const fileName = req.file.filename;
 
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, uniqueSuffix + '.pdf')
+  // extract.pdf config file
+  const options = {
+    normalizeWhitespace: true,
+    disableCombineTextItems: false 
+  }
+
+  // Extract PDF Data!
+  handleExtractPDF(fileName, options, (err, data) => {
+    if(err){
+      next(err)
     }
-})
-
-router.post('/', upload.single('pdf-input'),  (req, res, next) => {
-    const fileName = req.file.filename;
-    const options = {
-      normalizeWhitespace: true,
-      disableCombineTextItems: false 
-    }
-
-    handleExtractPDF(fileName, options, (err, data) => {
-      if(err){
-        res.status(500).send(err.message)
-      }
-      res.status(200).json(data)
-    });
+    res.status(200).json(data)
+  });
 })
 
 router.get('/download/:id', (req, res, next) => {

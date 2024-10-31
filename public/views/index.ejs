@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> <%= title %> </title>
     
-    <!-- Bootstrap CSS -->
+    <!-- CSS Links -->
+    <!-- Boostrap -->
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/css/pretty-print-json.css>
     
+    <!-- index.css -->
     <link rel="stylesheet" href="/styles/index.css">
 </head>
 <body>
-    
     <main class="p-4">
         <h1 class="text-center mb-5"> <%= title %> </h1>
             <form action="/pdf-extract" method="post" enctype="multipart/form-data" class="form-box fs-5" id="pdf-upload-form">
@@ -48,13 +48,15 @@
     <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header justify-content-between">
                 <h1 class="modal-title fs-3 text-center">PFD Line Extract Result:</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="d-flex align-items-center gap-4">
+                    <p class="mb-0">Ref Id: <span id="doc-ref-id"></span></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
             </div>
             <div class="modal-body">
-                <p class="fw-semibold" id="doc-ref-id">Ref Id: </p>
-                <ol class="list-group list-group-numbered py-4 px-4" id="content-value">
+                <ol class="list-group list-group-numbered py-2 px-4" id="content-value">
 
                 </ol>
             </div>
@@ -69,7 +71,7 @@
     </div>
 </body>
 
-<script src=https://cdn.jsdelivr.net/npm/pretty-print-json@3.0/dist/pretty-print-json.min.js></script>
+<!-- index.js -->
 <script src="/js/index.js"></script>
 
 </html>

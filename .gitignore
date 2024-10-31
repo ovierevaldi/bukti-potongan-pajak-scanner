@@ -1,3 +1,8 @@
 node_modules
 .env
-upload
+
+# keep the folder but ignore the file inside uploads
+/uploads/pdfs/*
+/uploads/jsons/*
+!/uploads/pdfs.gitkeep
+!/uploads/jsons.gitkeep

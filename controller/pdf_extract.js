@@ -1,50 +1,56 @@
-import multer from 'multer'
 import { PDFExtract } from 'pdf.js-extract';
 import fs from 'fs';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const pdfExtract = new PDFExtract();
-const storage = multer.diskStorage({
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, uniqueSuffix + '.pdf')
-    }
-})
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const handleExtractPDF = (filename, options = {}, callback) => {
-  const filePath = path.join(__dirname, '..', 'uploads', 'pdfs', filename);
+
+  // set pdf save file
+  const pdfPath = path.join(__dirname, '..', 'uploads', 'pdfs', filename);
   
   try {
-    const buffer = fs.readFileSync(filePath);
+    const buffer = fs.readFileSync(pdfPath);
+
     pdfExtract.extractBuffer(buffer, options, async (err, data) => {
+      
       if (err){
         return callback({message: 'Cannot extract pdf!'})
       }
-      await saveJSONFile(filename, data.pages);
+
       const id = path.basename(filename, '.pdf');
 
-      return callback(null, {ref_id: id, data: data.pages})
+      const jsonData = {
+        ref_id: id, 
+        data: data
+      }
+      // Save PDF data as JSON async     
+      await asynCreateAndSaveJsonData(id, jsonData);
+
+      // Send extract data to the client
+      return callback(null, jsonData);
     });
     
-  } catch (error) {
-      return callback({message: 'File is not found!'})
+  } 
+  catch (error) {
+      return callback({message: 'PDF File is not found!'})
   }
 }
 
-const saveJSONFile = async (filename, data) => {
-    const name = path.basename(filename, '.pdf')
-    const filePath = path.join(__dirname, '..', 'uploads', 'jsons', name + '.json');
+const asynCreateAndSaveJsonData = async (filename, data) => {
+    // Save JSON Data folder location
+    const filePath = path.join(__dirname, '..', 'uploads', 'jsons', filename + '.json');
 
     try {
-      fs.writeFileSync(filePath, JSON.stringify(data));
-      console.log('JSON file has been saved!');
-    } catch (error) {
-      console.log(error);
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+     
+    } 
+    catch (error) {
+      console.log('Cannot save json file data: ' + error)
     }
 }
 
 
-export default handleExtractPDF
+export default handleExtractPDF;

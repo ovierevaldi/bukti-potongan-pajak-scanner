@@ -22,6 +22,10 @@ function showErrorAlert(value = false, message = ''){
     if(value){
         errorAlert.innerHTML = message;
         errorAlert.hidden = false;
+
+        setTimeout(() => {
+            showErrorAlert(false);
+        }, 4000)
     }
     else{
         errorAlert.innerHTML = '';
@@ -37,54 +41,77 @@ async function sendPDFile(event){
         method: 'POST',
         body: formData
     })
+    if(!response.ok){
+        showErrorAlert(true, 'Something wrong, Please try again');
+        return;
+    }
 
-    const result = await response.text();
-    setPdfPajakValue(result);
+    setPdfPajakData(await response.text());
 }
 
-const form = document.getElementById("pdf-upload-form");
-
-form.addEventListener("submit", sendPDFile);
-
-function setPdfPajakValue(strArray){
-    const parsed = JSON.parse(strArray)
-    // const data = {
-    //     ref_id: strArray.ref_id,
-    //     data: strArray.data
-    // }
-
+function setPdfPajakData(strArray){
+    const parsedData = JSON.parse(strArray);
+    
+    const data = {
+        ref_id: parsedData.ref_id,
+        data: parsedData.data
+    }
+    // Set ID ref for downloading json
     const ref_id_element = document.getElementById('doc-ref-id');
-    ref_id_element.innerHTML = parsed.ref_id;
+    ref_id_element.innerHTML = data.ref_id;
 
-    const content = parsed.data
+    // get the PDF scan data
+    const pages = data.data.pages[0].content;
     const resultElement = document.getElementById('content-value');
+    
+    pages.forEach(data => {
+        // Eleminate the whitespace string
+        if(data.str != '' && data.str.trim() !== ""){
+            const dataElement = document.createElement('li');
+            
+            // HTML
+            dataElement.innerHTML = `
+            <span 
+                style="margin-bottom: 10px;
+                display: inline-block;">
+                <span 
+                    style="width: 55px; display: inline-block; font-weight: 600">
+                    Value:
+                </span>
+                <span style="">${data.str}</span>
+            </span> 
+            <br>
+            <span style="margin-left: 1rem">
+                <span 
+                    style="width: 55px; display: inline-block; font-weight: 600">
+                    Details:
+                </span> 
+                <span>
+                    { x: ${data.x.toFixed(2)}, y: ${data.y.toFixed(2)}, width: ${data.width.toFixed(2)}, height: ${data.height.toFixed(2)} }
+                </span>
+            </span>`;
 
-    content[0].content.forEach(element => {
-        if(element.str != '' && element.str.trim() !== ""){
-        const newElement = document.createElement('li');
-        newElement.innerHTML = `
-            <span style="
-    margin-bottom: 10px;
-    display: inline-block;"><span style="width: 55px; display: inline-block; font-weight: 600">Value:</span> <span style="">${element.str}</span></span> 
-            <br> 
-            <span style="margin-left: 1rem"><span style="width: 55px; display: inline-block; font-weight: 600">Details:</span> <span>{ x: ${element.x.toFixed(2)}, y: ${element.y.toFixed(2)}, width: ${element.width.toFixed(2)}, height: ${element.height.toFixed(2)} }</span></span>
-        `;
-        newElement.classList.add('list-group-item');
-        resultElement.appendChild(newElement);
+            dataElement.classList.add('list-group-item');
+            resultElement.appendChild(dataElement);
         }
-});
+    });
+
+    return;
 };
 
 
 async function downloadJson(){
     const ref_id_element = document.getElementById('doc-ref-id');
+
+    // Call the download json data API
     const response = await fetch('/pdf-extract/download/' + ref_id_element.innerText);
 
     if (!response.ok) {
-        console.error('Failed to download file:', response.statusText);
+        showErrorAlert(true, 'Failed to download data, please try again');
         return;
     }
 
+    // Create download file
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
 
@@ -93,7 +120,14 @@ async function downloadJson(){
     a.href = url;
     a.download = `${ref_id_element.innerText}.json`; 
     document.body.appendChild(a);
-    a.click(); // Simulate click to download
-    a.remove(); // Remove the link after downloading
-    window.URL.revokeObjectURL(url); // Clean up the URL.createObjectURL
+    // Simulate click to download
+    a.click(); 
+    // Remove the link after downloading
+    a.remove(); 
+    // Clean up the URL.createObjectURL
+    window.URL.revokeObjectURL(url); 
 }
+
+// Event Listener
+const form = document.getElementById("pdf-upload-form");
+form.addEventListener("submit", sendPDFile);
