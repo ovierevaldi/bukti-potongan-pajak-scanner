@@ -22,12 +22,14 @@ const handleExtractPDF = (filename, options = {}, callback) => {
   
   try {
     const buffer = fs.readFileSync(filePath);
-    console.log(options)
-    pdfExtract.extractBuffer(buffer, options, (err, data) => {
+    pdfExtract.extractBuffer(buffer, options, async (err, data) => {
       if (err){
         return callback({message: 'Cannot extract pdf!'})
       }
-      return callback(null, data.pages)
+      await saveJSONFile(filename, data.pages);
+      const id = path.basename(filename, '.pdf');
+
+      return callback(null, {ref_id: id, data: data.pages})
     });
     
   } catch (error) {
@@ -35,6 +37,20 @@ const handleExtractPDF = (filename, options = {}, callback) => {
   }
 }
 
+const saveJSONFile = async (filename, data) => {
+  // Your JSON data
+    const name = path.basename(filename, '.pdf')
+
+    // Define the directory path
+    const filePath = path.join(__dirname, '..', 'uploads', 'jsons', name + '.json');
+
+    try {
+      fs.writeFileSync(filePath, JSON.stringify(data));
+      console.log('JSON file has been saved!');
+    } catch (error) {
+      console.log(error);
+    }
+}
 
 
 export default handleExtractPDF

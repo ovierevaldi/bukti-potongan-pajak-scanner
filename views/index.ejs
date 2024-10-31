@@ -51,12 +51,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <p class="fw-semibold" id="doc-ref-id">Ref Id: </p>
                 <ol class="list-group list-group-numbered py-4 px-4" id="content-value">
 
                 </ol>
             </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Download</button>
+            <div class="modal-footer justify-content-center ">
+                <button type="button" class="btn btn-primary d-flex align-items-center p-3 mx-3" data-bs-dismiss="modal" onclick="downloadJson()">
+                    <img src="/icons/file.svg" alt="" style="width: 20px; margin-right: 8px;">
+                    Download .json
+                </button>
             </div>
         </div>
         </div>

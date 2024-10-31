@@ -41,6 +41,17 @@ router.post('/', upload.single('pdf-input'),  (req, res, next) => {
     });
 })
 
+router.get('/download/:id', (req, res, next) => {
+  const id = req.params.id;
+  const filePath = path.join(__dirname, '..', 'uploads', 'jsons', id + '.json');
+
+  res.download(filePath, (err) => {
+    if (err) {
+      res.status(500).send('Error occurred while sending the file.');
+    }
+  });
+})
+
 const prettyPrint = (data) => {
   // const formatter = new JSONFormatter(data);
 

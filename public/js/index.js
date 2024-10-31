@@ -35,7 +35,16 @@ const form = document.getElementById("pdf-upload-form");
 form.addEventListener("submit", sendPDFile);
 
 function setPdfPajakValue(strArray){
-    const content = JSON.parse(strArray);
+    const parsed = JSON.parse(strArray)
+    // const data = {
+    //     ref_id: strArray.ref_id,
+    //     data: strArray.data
+    // }
+
+    const ref_id_element = document.getElementById('doc-ref-id');
+    ref_id_element.innerHTML = parsed.ref_id;
+
+    const content = parsed.data
     const resultElement = document.getElementById('content-value');
 
     content[0].content.forEach(element => {
@@ -51,6 +60,28 @@ function setPdfPajakValue(strArray){
         newElement.classList.add('list-group-item');
         resultElement.appendChild(newElement);
         }
-    });
-
+});
 };
+
+
+async function downloadJson(){
+    const ref_id_element = document.getElementById('doc-ref-id');
+    const response = await fetch('/pdf-extract/download/' + ref_id_element.innerText);
+
+    if (!response.ok) {
+        console.error('Failed to download file:', response.statusText);
+        return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a temporary link element
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${ref_id_element.innerText}.json`; 
+    document.body.appendChild(a);
+    a.click(); // Simulate click to download
+    a.remove(); // Remove the link after downloading
+    window.URL.revokeObjectURL(url); // Clean up the URL.createObjectURL
+}
