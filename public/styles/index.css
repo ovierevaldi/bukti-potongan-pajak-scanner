@@ -1,0 +1,27 @@
+.form-box{
+    width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+#submit-btn{
+    min-width: 130px;
+}
+
+#content-value{
+    max-height: 700px;
+    overflow: auto;
+    
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 1em;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Wrap long lines */
+    word-wrap: break-word;
+    font-family: monospace;
+}
